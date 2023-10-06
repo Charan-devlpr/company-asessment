@@ -86,7 +86,16 @@ app.post("/api/signup", async (request, response) => {
 // delete the post
 
 app.delete("/api/deletepost/:postId/", async (request, response) => {
+  let jwtToken;
   const { postId } = request.params;
+  const authHeader = request.headers["authorization"];
+  if (authHeader !== undefined) {
+    jwtToken = authHeader.split(" ")[1];
+  }
+  if (jwtToken === undefined) {
+    response.status(403);
+    response.send("Unauthorized to delete the post");
+  }else{
   const postIdQuery = `
   SELECT * FROM user WHERE postId=${postId};`;
   const dbResponse = await database.get(postIdQuery);
@@ -101,6 +110,7 @@ app.delete("/api/deletepost/:postId/", async (request, response) => {
     response.status(404);
     response.send("Post ID not found");
   }
+}
 });
 
 // fetching all post by userId
