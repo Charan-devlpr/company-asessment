@@ -76,7 +76,7 @@ app.post("/api/signup", async (request, response) => {
     if (dbResponse.email === email) {
       response.status(400);
       response.send("Email already registered");
-    } else if (typeof email !== string) {
+    } else{
       response.status(400);
       response.send("Invalid email format");
     }
